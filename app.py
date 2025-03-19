@@ -5,7 +5,7 @@ import requests
 app = Flask(__name__)
 
 # GKE Persistent Volume Mount Directory
-STORAGE_DIR = "/root/samruddhi_PV_dir"
+STORAGE_DIR = "/samruddhi_PV_dir"
 SERVICE2_URL = "http://service2:6001/process"  # Container 2 URL
 
 # Ensure the persistent storage directory exists
