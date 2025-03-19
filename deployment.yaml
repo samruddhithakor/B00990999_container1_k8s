@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: container-1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: container-1
+  template:
+    metadata:
+      labels:
+        app: container-1
+    spec:
+      containers:
+      - name: container-1
+        image:  us-central1-docker.pkg.dev/csci5409cloudcomputing-453821/container-repository/container1:latest
+        volumeMounts:
+        - mountPath: /samruddhi_PV_dir  
+          name: persistent-storage
+      volumes:
+      - name: persistent-storage
+        persistentVolumeClaim:
+          claimName: samruddhi-pvc 
