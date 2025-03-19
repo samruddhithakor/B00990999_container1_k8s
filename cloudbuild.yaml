@@ -9,7 +9,6 @@ steps:
       - '-c'
       - |
         gcloud container clusters get-credentials k8s-cluster --zone us-central1-a
-        kubectl apply -f pv.yaml
         kubectl apply -f pvc.yaml
         kubectl apply -f deployment.yaml
         kubectl apply -f service.yaml
