@@ -4,16 +4,13 @@ import requests
 
 app = Flask(__name__)
 
-# GKE Persistent Volume Mount Directory
 STORAGE_DIR = "/samruddhi_PV_dir"
-SERVICE2_URL = "http://service2:6001/process"  # Container 2 URL
+SERVICE2_URL = "http://service2:6001/process"  # Use Kubernetes service name
 
-# Ensure the persistent storage directory exists
 os.makedirs(STORAGE_DIR, exist_ok=True)
 
 @app.route('/store-file', methods=['POST'])
 def store_file():
-
     data = request.get_json()
 
     if not data or "file" not in data or "data" not in data:
@@ -30,10 +27,9 @@ def store_file():
     except Exception as e:
         return jsonify({"file": file_name, "error": str(e)}), 500
 
-
 @app.route('/calculate', methods=['POST'])
 def calculate():
-    """ Calls Container 2 to compute the sum of a given product """
+    """Calls Container 2 to compute the sum of a given product"""
     data = request.get_json()
 
     if not data or "file" not in data or "product" not in data:
@@ -43,9 +39,13 @@ def calculate():
     if not os.path.exists(file_path):
         return jsonify({"file": data["file"], "error": "File not found."}), 404
 
-    response = requests.post(SERVICE2_URL, json=data)
-    return response.json(), response.status_code
-
+    try:
+        response = requests.post(SERVICE2_URL, json=data, timeout=5)
+        if response.status_code != 200:
+            return jsonify({"file": data["file"], "error": "Internal server error."}), 500
+        return response.json(), response.status_code
+    except requests.exceptions.RequestException as e:
+        return jsonify({"file": data["file"], "error": "Failed to connect to the calculation service."}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=6000)
