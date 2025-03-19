@@ -5,7 +5,7 @@ import requests
 app = Flask(__name__)
 
 STORAGE_DIR = "/samruddhi_PV_dir"
-SERVICE2_URL = "http://service2:6001/process"  # Use Kubernetes service name
+SERVICE2_URL = 'http://service2.default.svc.cluster.local:6001/process'  # Use Kubernetes service name
 
 os.makedirs(STORAGE_DIR, exist_ok=True)
 
