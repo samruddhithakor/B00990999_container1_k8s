@@ -17,8 +17,8 @@ spec:
         image:  us-central1-docker.pkg.dev/csci5409cloudcomputing-453821/container-repository/container1:latest
         volumeMounts:
         - mountPath: /samruddhi_PV_dir  
-          name: standard-storage
+          name: standard-volume
       volumes:
-      - name: standard-storage
+      - name: standard-volume
         persistentVolumeClaim:
           claimName: samruddhi-pvc 

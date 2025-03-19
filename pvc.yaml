@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: samruddhi-pvc 
 spec:
-  storageClassName: standard  
+  storageClassName: standard-rwo  
   accessModes:
     - ReadWriteOnce 
   resources:
