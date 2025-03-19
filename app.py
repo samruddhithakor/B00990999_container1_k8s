@@ -29,7 +29,7 @@ def store_file():
 
 @app.route('/calculate', methods=['POST'])
 def calculate():
-    """Calls Container 2 to compute the sum of a given product"""
+
     data = request.get_json()
 
     if not data or "file" not in data or "product" not in data:
@@ -40,12 +40,12 @@ def calculate():
         return jsonify({"file": data["file"], "error": "File not found."}), 404
 
     try:
-        response = requests.post(SERVICE2_URL, json=data, timeout=5)
-        if response.status_code != 200:
-            return jsonify({"file": data["file"], "error": "Internal server error."}), 500
-        return response.json(), response.status_code
+        response = requests.post(SERVICE2_URL, json=data)
+        response.raise_for_status() 
     except requests.exceptions.RequestException as e:
-        return jsonify({"file": data["file"], "error": "Failed to connect to the calculation service."}), 500
+        return jsonify({"file": data["file"], "error": str(e)}), 500
+
+    return response.json(), response.status_code
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=6000)
