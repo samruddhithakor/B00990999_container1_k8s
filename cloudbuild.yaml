@@ -4,4 +4,12 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/csci5409cloudcomputing-453821/container-repository/container1:latest']
   - name: 'gcr.io/cloud-builders/kubectl'
-    args: ['rollout', 'restart', 'deployment/container1']
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        gcloud container clusters get-credentials k8s-cluster --zone us-central1-a
+        kubectl apply -f pvc.yaml
+        kubectl apply -f deployment.yaml
+        kubectl apply -f service.yaml
+    
