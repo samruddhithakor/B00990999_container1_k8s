@@ -5,7 +5,7 @@ import requests
 app = Flask(__name__)
 
 STORAGE_DIR = "/samruddhi_PV_dir"
-SERVICE2_URL = 'http://container-2-service:6001/process'  # Use Kubernetes service name
+SERVICE2_URL = "http://container-2-service:6001/process"  # Use Kubernetes service name
 
 os.makedirs(STORAGE_DIR, exist_ok=True)
 
@@ -31,9 +31,9 @@ def store_file():
 def calculate():
 
     data = request.get_json()
-
-    if not data or "file" not in data or "product" not in data:
-        return jsonify({"file": None, "error": "Invalid JSON input."}), 400
+    if not data or 'file' not in data or 'product' not in data:
+        app.logger.error(f"Invalid request data: {data}")
+        return jsonify({'file': None, 'error': 'Invalid JSON input'}), 400
 
     file_path = os.path.join(STORAGE_DIR, data["file"])
     if not os.path.exists(file_path):
