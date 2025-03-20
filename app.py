@@ -4,7 +4,7 @@ import os
 
 app = Flask(__name__)
 
-PV_DIR = "/samruddhi_PV_dir"  
+STORAGE_DIR = "/samruddhi_PV_dir"  
 
 @app.route('/store-file', methods=['POST'])
 def store_file():
@@ -19,7 +19,7 @@ def store_file():
         return jsonify({"file": None, "error": "Invalid JSON input."}), 400
 
     try:
-        filepath = os.path.join(PV_DIR, filename)
+        filepath = os.path.join(STORAGE_DIR, filename)
         with open(filepath, 'w') as f:
             f.write(content)
         return jsonify({"file": filename, "message": "Success."}), 200
