@@ -9,4 +9,4 @@ spec:
     - protocol: TCP
       port: 80      
       targetPort: 6000  
-  type: LoadBalancer  # This will expose the service to the internet
+  type: LoadBalancer 
