@@ -5,7 +5,6 @@ import requests
 app = Flask(__name__)
 
 STORAGE_DIR = "/samruddhi_PV_dir"
-SERVICE2_URL = "http://container-2-service:6001/process"  # Use Kubernetes service name
 
 os.makedirs(STORAGE_DIR, exist_ok=True)
 
@@ -29,23 +28,26 @@ def store_file():
 
 @app.route('/calculate', methods=['POST'])
 def calculate():
-
     data = request.get_json()
     if not data or 'file' not in data or 'product' not in data:
-        app.logger.error(f"Invalid request data: {data}")
-        return jsonify({'file': None, 'error': 'Invalid JSON input'}), 400
+        return jsonify({"file": None, "error": "Invalid JSON input."}), 400
 
-    file_path = os.path.join(STORAGE_DIR, data["file"])
-    if not os.path.exists(file_path):
-        return jsonify({"file": data["file"], "error": "File not found."}), 404
+    filename = data['file']
+    product = data['product']
 
     try:
-        response = requests.post(SERVICE2_URL, json=data)
-        response.raise_for_status() 
+        response = requests.post(
+            "http://container-2-service:6000/process",
+            json={"file": filename, "product": product}
+        )
+        response.raise_for_status()
+        return jsonify(response.json()), 200
     except requests.exceptions.RequestException as e:
-        return jsonify({"file": data["file"], "error": str(e)}), 500
-
-    return response.json(), response.status_code
+        if response.status_code == 400:
+            error = response.json().get('error', 'Unknown error')
+            return jsonify({"file": filename, "error": error}), 400
+        else:
+            return jsonify({"file": filename, "error": "Error processing request."}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=6000)
