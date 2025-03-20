@@ -14,6 +14,7 @@ def store_file():
     filename = data['file']
     content = data['data']
 
+    app.logger.info("B00990999_Samruddhi")
 
     if not filename:
         return jsonify({"file": None, "error": "Invalid JSON input."}), 400
