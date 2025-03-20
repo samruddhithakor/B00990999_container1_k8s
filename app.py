@@ -6,7 +6,6 @@ app = Flask(__name__)
 
 STORAGE_DIR = "/samruddhi_PV_dir"  
 
-@app.route('/store-file', methods=['POST'])
 def store_file():
     data = request.get_json()
     if not data or 'file' not in data or 'data' not in data:
@@ -15,7 +14,6 @@ def store_file():
     filename = data['file']
     content = data['data']
 
-    app.logger.info('B00990999_Samruddhi')
 
     if not filename:
         return jsonify({"file": None, "error": "Invalid JSON input."}), 400
